@@ -50,9 +50,10 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   };
 
   // Shared style for all form labels (left aligned with the Android blue shadow).
+  // Font size increased to 22sp so the label text matches the Android look.
   static const _labelStyle = TextStyle(
     color: Colors.black,
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: FontWeight.bold,
     shadows: [
       Shadow(
@@ -190,8 +191,9 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Back button with a smaller gap below it.
         Padding(
-          padding: const EdgeInsets.only(left: 10, top: 20, bottom: 30),
+          padding: const EdgeInsets.only(left: 10, top: 20, bottom: 10),
           child: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Image.asset(
@@ -202,8 +204,9 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
             ),
           ),
         ),
+        // Company logo button made slightly taller and with a smaller bottom gap.
         Padding(
-          padding: const EdgeInsets.only(bottom: 30),
+          padding: const EdgeInsets.only(bottom: 10),
           child: Center(
             child: GestureDetector(
               onTap: () {
@@ -214,7 +217,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
               child: Image.asset(
                 'assets/images/logoover.png',
                 width: 260,
-                height: 58,
+                height: 70,
                 fit: BoxFit.contain,
               ),
             ),
@@ -282,8 +285,9 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                 ),
               ]
             : [
+                // Label column: 150dp to fit the larger 22sp font while staying left aligned.
                 Container(
-                  width: 130,
+                  width: 150,
                   padding: const EdgeInsets.only(left: 10),
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -305,9 +309,10 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   }
 
   /// A translucent silver text field matching the Android edit style.
+  // Height reduced to 40dp for a more compact iPhone form.
   Widget _buildSilverTextField(TextEditingController controller) {
     return Container(
-      height: 50,
+      height: 40,
       decoration: pgmTextFieldDecoration(),
       child: TextField(
         controller: controller,
@@ -315,7 +320,8 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
         textAlign: TextAlign.start,
         decoration: const InputDecoration(
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+          // Vertical padding reduced to keep the text centred in the shorter box.
+          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         ),
       ),
     );
@@ -356,7 +362,8 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
               padding: const EdgeInsets.only(right: 10),
               child: selected
                   ? _buildSilverTextField(_regNo)
-                  : const SizedBox(height: 50),
+                  // Same 40dp placeholder height as the edit boxes.
+                  : const SizedBox(height: 40),
             ),
           ),
         ],
