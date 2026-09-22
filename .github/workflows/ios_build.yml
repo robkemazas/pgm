@@ -22,5 +22,16 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build iOS (no codesign)
-        run: flutter build ios --no-codesign
+      - name: Build iOS simulator (no codesign)
+        run: flutter build ios --simulator --no-codesign
+
+      - name: Zip simulator app for Appetize
+        run: |
+          cd build/ios/iphonesimulator
+          zip -r ../../../ios-simulator.zip Runner.app
+
+      - name: Upload simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-app
+          path: ios-simulator.zip
