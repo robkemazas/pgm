@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart' as widgets;
 import 'package:pgm_iphone/app_styles.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:pgm_iphone/database/app_database.dart';
@@ -240,8 +241,18 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
           for (var i = 0; i < 8; i++)
             _buildInfoRow(_fieldDefs[i].label, _controllers[_fieldDefs[i].key]!),
           // VAT / TAX selection placed directly below Email.
-          _buildRadioRow('VAT reg. no.:', 'vat'),
-          _buildRadioRow('TAX reg. no.:', 'tax'),
+          widgets.RadioGroup<String>(
+            groupValue: _regType,
+            onChanged: (v) {
+              if (v != null) setState(() => _regType = v);
+            },
+            child: Column(
+              children: [
+                _buildRadioRow('VAT reg. no.:', 'vat'),
+                _buildRadioRow('TAX reg. no.:', 'tax'),
+              ],
+            ),
+          ),
           _buildCarbonSeparator(),
           // Bank details.
           for (var i = 8; i < 12; i++)
@@ -279,7 +290,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.only(right: 5),
                     child: _buildSilverTextField(controller),
                   ),
                 ),
@@ -297,9 +308,10 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
+                // Expanded field with a small 5dp right gap for a longer edit box.
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.only(right: 5),
                     child: _buildSilverTextField(controller),
                   ),
                 ),
@@ -320,8 +332,8 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
         textAlign: TextAlign.start,
         decoration: const InputDecoration(
           border: InputBorder.none,
-          // Vertical padding reduced to keep the text centred in the shorter box.
-          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          // Small 5dp horizontal gap so text starts/ends near the box edges.
+          contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
         ),
       ),
     );
@@ -338,10 +350,12 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Container(
-              constraints: const BoxConstraints(minWidth: 190),
+              // Minimum 120dp, but the label will take its natural size so the edit box stays long.
+              constraints: const BoxConstraints(minWidth: 120),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Radio value is selected by the RadioGroup ancestor.
                   Radio<String>(
                     value: value,
                     activeColor: Colors.red,
@@ -359,7 +373,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(right: 5),
               child: selected
                   ? _buildSilverTextField(_regNo)
                   // Same 40dp placeholder height as the edit boxes.
