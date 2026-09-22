@@ -24,8 +24,8 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     _FieldDef('postCode', 'Post code'),
     _FieldDef('phone', 'Phone number'),
     _FieldDef('email', 'Email'),
-    _FieldDef('bankName', 'Bank name'),
-    _FieldDef('sortCode', 'Sort code'),
+    _FieldDef('bankName', 'Bank'),
+    _FieldDef('sortCode', 'Sort Code'),
     _FieldDef('bic', 'BIC'),
     _FieldDef('iban', 'IBAN'),
     _FieldDef('paypal', 'PayPal'),
@@ -120,76 +120,32 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Garage info')),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 500),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                const _LogoPlaceholder(),
-                const SizedBox(height: 16),
-                ..._fieldDefs.map((f) => _buildField(f)),
-                const SizedBox(height: 8),
-                _buildTaxVatRow(),
-                _buildRegNoField(),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _save,
-                      child: const Text('Save'),
-                    ),
-                    ElevatedButton(
-                      onPressed: _clear,
-                      child: const Text('Clear'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildField(_FieldDef f) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: TextField(
-        controller: _controllers[f.key],
-        decoration: InputDecoration(
-          labelText: f.label,
-          border: const OutlineInputBorder(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTaxVatRow() {
-    return widgets.RadioGroup<String>(
-      groupValue: _regType,
-      onChanged: (v) {
-        if (v != null) setState(() => _regType = v);
-      },
-      child: Row(
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          Expanded(
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Radio<String>(value: 'tax'),
-              title: const Text('Tax'),
-            ),
+          Image.asset(
+            'assets/images/garage_workshop.png',
+            fit: BoxFit.cover,
           ),
-          Expanded(
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Radio<String>(value: 'vat'),
-              title: const Text('VAT'),
+          SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  child: Column(
+                    children: [
+                      _buildTopBar(),
+                      const SizedBox(height: 12),
+                      _buildAmberForm(),
+                      const SizedBox(height: 24),
+                      _buildBottomButtons(),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -197,16 +153,200 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
-  Widget _buildRegNoField() {
+  Widget _buildTopBar() {
+    return SizedBox(
+      height: 60,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                width: 50,
+                height: 40,
+                decoration: _metallicDecoration(radius: 8),
+                child: const Icon(Icons.arrow_back, color: Colors.black),
+              ),
+            ),
+          ),
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Logo picker not implemented yet')),
+                );
+              },
+              child: Container(
+                height: 46,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: _cyanDecoration(),
+                child: const Center(
+                  child: Text(
+                    'ADD COMPANY LOGO',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAmberForm() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFA726),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.black, width: 2),
+        boxShadow: const [
+          BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ..._fieldDefs.map((f) => _buildInfoRow(f.label, _controllers[f.key]!)),
+          widgets.RadioGroup<String>(
+            groupValue: _regType,
+            onChanged: (v) {
+              if (v != null) setState(() => _regType = v);
+            },
+            child: Column(
+              children: [
+                _buildRadioRow('VAT reg. no.', 'vat'),
+                _buildRadioRow('TAX reg. no.', 'tax'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 100,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                '$label:',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: _buildSilverTextField(controller)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSilverTextField(TextEditingController controller) {
+    return Container(
+      height: 42,
+      decoration: _silverDecoration(),
       child: TextField(
-        controller: _regNo,
-        decoration: InputDecoration(
-          labelText: _regType == 'tax' ? 'Tax reg no' : 'VAT reg no',
-          border: const OutlineInputBorder(),
+        controller: controller,
+        style: const TextStyle(color: Colors.black, fontSize: 17),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         ),
       ),
+    );
+  }
+
+  Widget _buildRadioRow(String label, String value) {
+    final selected = value == _regType;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Radio<String>(
+            value: value,
+            activeColor: Colors.red,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '$label:',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: selected
+                ? _buildSilverTextField(_regNo)
+                : const SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        GestureDetector(
+          onTap: _clear,
+          child: Container(
+            width: 130,
+            height: 55,
+            decoration: _metallicDecoration(),
+            child: const Center(
+              child: Text(
+                'CLEAR',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
+                ),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: _save,
+          child: Container(
+            width: 130,
+            height: 55,
+            decoration: _metallicDecoration(),
+            child: const Center(
+              child: Text(
+                'SUBMIT',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -217,14 +357,58 @@ class _FieldDef {
   const _FieldDef(this.key, this.label);
 }
 
-class _LogoPlaceholder extends StatelessWidget {
-  const _LogoPlaceholder();
+BoxDecoration _metallicDecoration({double radius = 12}) {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(radius),
+    gradient: const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color(0xFFB0B0B0),
+        Color(0xFFE8E8E8),
+        Color(0xFF999999),
+        Color(0xFF666666),
+      ],
+      stops: [0.0, 0.35, 0.65, 1.0],
+    ),
+    border: Border.all(color: const Color(0xFF444444), width: 2),
+    boxShadow: const [
+      BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
+    ],
+  );
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      height: 80,
-      child: Center(child: Text('Garage logo — coming soon')),
-    );
-  }
+BoxDecoration _silverDecoration() {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(8),
+    gradient: const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color(0xFFCCCCCC),
+        Color(0xFFFFFFFF),
+        Color(0xFFCCCCCC),
+      ],
+      stops: [0.0, 0.5, 1.0],
+    ),
+    border: Border.all(color: Color(0xFF555555), width: 2),
+    boxShadow: const [
+      BoxShadow(color: Colors.black26, blurRadius: 3, offset: Offset(2, 2)),
+    ],
+  );
+}
+
+BoxDecoration _cyanDecoration() {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(8),
+    gradient: const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0xFF00FFFF), Color(0xFF00BCD4)],
+    ),
+    border: Border.all(color: Colors.black, width: 2),
+    boxShadow: const [
+      BoxShadow(color: Colors.black54, blurRadius: 4, offset: Offset(2, 2)),
+    ],
+  );
 }
