@@ -162,11 +162,11 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
             alignment: Alignment.centerLeft,
             child: GestureDetector(
               onTap: () => Navigator.pop(context),
-              child: Container(
-                width: 50,
+              child: Image.asset(
+                'assets/images/back.png',
+                width: 70,
                 height: 40,
-                decoration: _metallicDecoration(radius: 8),
-                child: const Icon(Icons.arrow_back, color: Colors.black),
+                fit: BoxFit.fill,
               ),
             ),
           ),
@@ -177,21 +177,10 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                   const SnackBar(content: Text('Logo picker not implemented yet')),
                 );
               },
-              child: Container(
+              child: Image.asset(
+                'assets/images/logoover.png',
                 height: 46,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: _cyanDecoration(),
-                child: const Center(
-                  child: Text(
-                    'ADD COMPANY LOGO',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
-                    ),
-                  ),
-                ),
+                fit: BoxFit.contain,
               ),
             ),
           ),
@@ -205,9 +194,9 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFA726),
+        color: const Color(0xEAFFAC1A),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.black, width: 2),
+        border: Border.all(color: Colors.black, width: 4),
         boxShadow: const [
           BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
         ],
@@ -313,7 +302,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
           child: Container(
             width: 130,
             height: 55,
-            decoration: _metallicDecoration(),
+            decoration: _buttonDecoration(),
             child: const Center(
               child: Text(
                 'CLEAR',
@@ -332,7 +321,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
           child: Container(
             width: 130,
             height: 55,
-            decoration: _metallicDecoration(),
+            decoration: _buttonDecoration(),
             child: const Center(
               child: Text(
                 'SUBMIT',
@@ -357,21 +346,13 @@ class _FieldDef {
   const _FieldDef(this.key, this.label);
 }
 
-BoxDecoration _metallicDecoration({double radius = 12}) {
+BoxDecoration _buttonDecoration({double radius = 10}) {
   return BoxDecoration(
     borderRadius: BorderRadius.circular(radius),
-    gradient: const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0xFFB0B0B0),
-        Color(0xFFE8E8E8),
-        Color(0xFF999999),
-        Color(0xFF666666),
-      ],
-      stops: [0.0, 0.35, 0.65, 1.0],
+    image: const DecorationImage(
+      image: AssetImage('assets/images/brushed_button.png'),
+      fit: BoxFit.fill,
     ),
-    border: Border.all(color: const Color(0xFF444444), width: 2),
     boxShadow: const [
       BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
     ],
@@ -380,35 +361,11 @@ BoxDecoration _metallicDecoration({double radius = 12}) {
 
 BoxDecoration _silverDecoration() {
   return BoxDecoration(
-    borderRadius: BorderRadius.circular(8),
-    gradient: const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0xFFCCCCCC),
-        Color(0xFFFFFFFF),
-        Color(0xFFCCCCCC),
-      ],
-      stops: [0.0, 0.5, 1.0],
-    ),
-    border: Border.all(color: Color(0xFF555555), width: 2),
+    color: const Color(0xCCFFFFFF),
+    borderRadius: BorderRadius.circular(6),
+    border: Border.all(color: Colors.black, width: 1),
     boxShadow: const [
       BoxShadow(color: Colors.black26, blurRadius: 3, offset: Offset(2, 2)),
-    ],
-  );
-}
-
-BoxDecoration _cyanDecoration() {
-  return BoxDecoration(
-    borderRadius: BorderRadius.circular(8),
-    gradient: const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFF00FFFF), Color(0xFF00BCD4)],
-    ),
-    border: Border.all(color: Colors.black, width: 2),
-    boxShadow: const [
-      BoxShadow(color: Colors.black54, blurRadius: 4, offset: Offset(2, 2)),
     ],
   );
 }

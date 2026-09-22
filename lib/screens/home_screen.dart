@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pgm_iphone/screens/garage_info_screen.dart';
 
-BoxDecoration _metallicDecoration({double radius = 12}) {
+BoxDecoration _buttonDecoration({double radius = 10}) {
   return BoxDecoration(
     borderRadius: BorderRadius.circular(radius),
-    gradient: const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0xFFB0B0B0),
-        Color(0xFFE8E8E8),
-        Color(0xFF999999),
-        Color(0xFF666666),
-      ],
-      stops: [0.0, 0.35, 0.65, 1.0],
+    image: const DecorationImage(
+      image: AssetImage('assets/images/brushed_button.png'),
+      fit: BoxFit.fill,
     ),
-    border: Border.all(color: const Color(0xFF444444), width: 2),
     boxShadow: const [
       BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
     ],
@@ -110,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: 140,
       height: 70,
-      decoration: _metallicDecoration(),
+      decoration: _buttonDecoration(),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedYear,
@@ -175,16 +167,22 @@ class _PgmButton extends StatelessWidget {
       child: Container(
         width: width ?? 150,
         height: 70,
-        decoration: _metallicDecoration(),
+        decoration: _buttonDecoration(),
         child: Center(
           child: Text(
-            label,
+            label.toUpperCase(),
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 17,
               fontWeight: FontWeight.bold,
-              shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
+              shadows: [
+                Shadow(
+                  color: Color(0xFF03A9F4),
+                  blurRadius: 4,
+                  offset: Offset(2, 2),
+                ),
+              ],
               height: 1.1,
             ),
           ),
