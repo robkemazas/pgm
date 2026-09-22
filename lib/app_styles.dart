@@ -18,7 +18,7 @@ BoxDecoration pgmButtonDecoration({double radius = 10}) {
 
 BoxDecoration pgmTextFieldDecoration() {
   return BoxDecoration(
-    color: pgmWhiteField,
+    color: Colors.white,
     borderRadius: BorderRadius.circular(6),
     border: Border.all(color: Colors.black, width: 1),
     boxShadow: const [

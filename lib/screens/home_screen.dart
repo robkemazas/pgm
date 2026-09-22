@@ -88,6 +88,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildYearDropdown() {
+    const yearStyle = TextStyle(
+      color: Colors.black,
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      shadows: [
+        Shadow(
+          color: Color(0xFF03A9F4),
+          blurRadius: 4,
+          offset: Offset(2, 2),
+        ),
+      ],
+    );
     return Container(
       width: 140,
       height: 70,
@@ -96,15 +108,16 @@ class _HomeScreenState extends State<HomeScreen> {
         child: DropdownButton<String>(
           value: selectedYear,
           isExpanded: true,
-          alignment: Alignment.center,
           icon: const SizedBox.shrink(),
           dropdownColor: Colors.grey[300],
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
-          ),
+          selectedItemBuilder: (context) => years
+              .map((y) => Center(
+                    child: Text(
+                      y,
+                      style: yearStyle,
+                    ),
+                  ))
+              .toList(),
           items: years
               .map((y) => DropdownMenuItem(
                     value: y,
@@ -126,7 +139,11 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: buttons,
+        children: [
+          buttons[0],
+          const SizedBox(width: 12),
+          buttons[1],
+        ],
       ),
     );
   }

@@ -17,22 +17,34 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   String _regType = 'vat';
 
   static const _fieldDefs = [
-    _FieldDef('name', 'Name'),
-    _FieldDef('address1', 'Address 1'),
-    _FieldDef('address2', 'Address 2'),
-    _FieldDef('town', 'Town'),
-    _FieldDef('city', 'City'),
-    _FieldDef('postCode', 'Post code'),
-    _FieldDef('phone', 'Phone number'),
-    _FieldDef('email', 'Email'),
-    _FieldDef('bankName', 'Bank'),
-    _FieldDef('sortCode', 'Sort Code'),
-    _FieldDef('bic', 'BIC'),
-    _FieldDef('iban', 'IBAN'),
-    _FieldDef('paypal', 'PayPal'),
-    _FieldDef('revolut', 'Revolut'),
-    _FieldDef('skrill', 'Skrill'),
+    _FieldDef('name', 'Name :'),
+    _FieldDef('address1', 'Address 1:'),
+    _FieldDef('address2', 'Address 2:'),
+    _FieldDef('town', 'Town:'),
+    _FieldDef('city', 'City:'),
+    _FieldDef('postCode', 'Post code:'),
+    _FieldDef('phone', 'Phone Nr.:'),
+    _FieldDef('email', 'Email:'),
+    _FieldDef('bankName', 'Bank:'),
+    _FieldDef('sortCode', 'Sort Code :'),
+    _FieldDef('bic', 'BIC :'),
+    _FieldDef('iban', 'IBAN :'),
+    _FieldDef('paypal', 'Paypal :'),
+    _FieldDef('revolut', 'Revolut :'),
+    _FieldDef('skrill', 'Skrill :'),
   ];
+
+  static const _paymentImages = {
+    'Paypal :': 'assets/images/paypal.png',
+    'Revolut :': 'assets/images/revolut.png',
+    'Skrill :': 'assets/images/skrill.png',
+  };
+
+  static const _paymentColors = {
+    'Paypal :': Color(0xFF2338ac),
+    'Revolut :': Color(0xFF00BCD4),
+    'Skrill :': Color(0xFF7B1FA2),
+  };
 
   @override
   void initState() {
@@ -206,8 +218,8 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
             },
             child: Column(
               children: [
-                _buildRadioRow('VAT reg. no.', 'vat'),
-                _buildRadioRow('TAX reg. no.', 'tax'),
+                _buildRadioRow('VAT reg. no.:', 'vat'),
+                _buildRadioRow('TAX reg. no.:', 'tax'),
               ],
             ),
           ),
@@ -217,23 +229,52 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   }
 
   Widget _buildInfoRow(String label, TextEditingController controller) {
+    final paymentImage = _paymentImages[label];
+    final paymentColor = _paymentColors[label];
+    final isPayment = paymentImage != null;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           SizedBox(
-            width: 100,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                '$label:',
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            width: 120,
+            child: isPayment
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Image.asset(
+                        paymentImage,
+                        width: 28,
+                        height: 28,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          label,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: paymentColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      label,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(width: 8),
           Expanded(child: _buildSilverTextField(controller)),
@@ -269,10 +310,10 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
           ),
           const SizedBox(width: 4),
           Text(
-            '$label:',
+            label,
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 17,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),

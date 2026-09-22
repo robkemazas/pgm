@@ -16,7 +16,16 @@ class PgmApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
-        fontFamily: 'CherryCreamSoda',
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(
+            fontFamily: 'serif',
+            fontFamilyFallback: ['Georgia', 'Times New Roman'],
+          ),
+          titleMedium: TextStyle(
+            fontFamily: 'serif',
+            fontFamilyFallback: ['Georgia', 'Times New Roman'],
+          ),
+        ),
       ),
       home: const HomeScreen(),
     );
