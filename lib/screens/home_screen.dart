@@ -1,18 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pgm_iphone/app_styles.dart';
 import 'package:pgm_iphone/screens/garage_info_screen.dart';
 
-BoxDecoration _buttonDecoration({double radius = 10}) {
-  return BoxDecoration(
-    borderRadius: BorderRadius.circular(radius),
-    image: const DecorationImage(
-      image: AssetImage('assets/images/brushed_button.png'),
-      fit: BoxFit.fill,
-    ),
-    boxShadow: const [
-      BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
-    ],
-  );
-}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -59,16 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 24),
                     _buildButtonRow([
-                      _PgmButton(label: 'New\nappointment', onPressed: _notImplemented),
-                      _PgmButton(label: 'Pending\nAppointment', onPressed: _notImplemented),
+                      PgmButton(label: 'New\nappointment', onPressed: _notImplemented),
+                      PgmButton(label: 'Pending\nAppointment', onPressed: _notImplemented),
                     ]),
                     _buildButtonRow([
-                      _PgmButton(label: 'Service\nrecords', onPressed: _notImplemented),
-                      _PgmButton(label: 'Purchase\nexpenses', onPressed: _notImplemented),
+                      PgmButton(label: 'Service\nrecords', onPressed: _notImplemented),
+                      PgmButton(label: 'Purchase\nexpenses', onPressed: _notImplemented),
                     ]),
                     _buildButtonRow([
-                      _PgmButton(label: 'Expenses\nrecords', onPressed: _notImplemented),
-                      _PgmButton(label: 'Backup\nrestore', onPressed: _notImplemented),
+                      PgmButton(label: 'Expenses\nrecords', onPressed: _notImplemented),
+                      PgmButton(label: 'Backup\nrestore', onPressed: _notImplemented),
                     ]),
                   ],
                 ),
@@ -84,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _PgmButton(
+        PgmButton(
           label: 'Garage\ninfo',
           width: 140,
           onPressed: () => Navigator.push(
@@ -102,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: 140,
       height: 70,
-      decoration: _buttonDecoration(),
+      decoration: pgmButtonDecoration(),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedYear,
@@ -149,45 +138,3 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _PgmButton extends StatelessWidget {
-  final String label;
-  final double? width;
-  final VoidCallback? onPressed;
-
-  const _PgmButton({
-    required this.label,
-    this.width,
-    this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: width ?? 150,
-        height: 70,
-        decoration: _buttonDecoration(),
-        child: Center(
-          child: Text(
-            label.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  color: Color(0xFF03A9F4),
-                  blurRadius: 4,
-                  offset: Offset(2, 2),
-                ),
-              ],
-              height: 1.1,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

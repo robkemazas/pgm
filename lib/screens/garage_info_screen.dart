@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' as widgets;
+import 'package:pgm_iphone/app_styles.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:pgm_iphone/database/app_database.dart';
 
@@ -193,14 +194,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xEAFFAC1A),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.black, width: 4),
-        boxShadow: const [
-          BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
-        ],
-      ),
+      decoration: pgmAmberBoxDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -251,7 +245,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   Widget _buildSilverTextField(TextEditingController controller) {
     return Container(
       height: 42,
-      decoration: _silverDecoration(),
+      decoration: pgmTextFieldDecoration(),
       child: TextField(
         controller: controller,
         style: const TextStyle(color: Colors.black, fontSize: 17),
@@ -297,43 +291,18 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        GestureDetector(
-          onTap: _clear,
-          child: Container(
-            width: 130,
-            height: 55,
-            decoration: _buttonDecoration(),
-            child: const Center(
-              child: Text(
-                'CLEAR',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
-                ),
-              ),
-            ),
-          ),
+        PgmButton(
+          label: 'CLEAR',
+          textColor: Colors.red,
+          width: 130,
+          height: 55,
+          onPressed: _clear,
         ),
-        GestureDetector(
-          onTap: _save,
-          child: Container(
-            width: 130,
-            height: 55,
-            decoration: _buttonDecoration(),
-            child: const Center(
-              child: Text(
-                'SUBMIT',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
-                ),
-              ),
-            ),
-          ),
+        PgmButton(
+          label: 'SUBMIT',
+          width: 130,
+          height: 55,
+          onPressed: _save,
         ),
       ],
     );
@@ -346,26 +315,3 @@ class _FieldDef {
   const _FieldDef(this.key, this.label);
 }
 
-BoxDecoration _buttonDecoration({double radius = 10}) {
-  return BoxDecoration(
-    borderRadius: BorderRadius.circular(radius),
-    image: const DecorationImage(
-      image: AssetImage('assets/images/brushed_button.png'),
-      fit: BoxFit.fill,
-    ),
-    boxShadow: const [
-      BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
-    ],
-  );
-}
-
-BoxDecoration _silverDecoration() {
-  return BoxDecoration(
-    color: const Color(0xCCFFFFFF),
-    borderRadius: BorderRadius.circular(6),
-    border: Border.all(color: Colors.black, width: 1),
-    boxShadow: const [
-      BoxShadow(color: Colors.black26, blurRadius: 3, offset: Offset(2, 2)),
-    ],
-  );
-}
