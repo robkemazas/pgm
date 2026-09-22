@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart' as widgets;
 import 'package:pgm_iphone/app_styles.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:pgm_iphone/database/app_database.dart';
@@ -24,6 +23,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   String _regType = 'vat';
 
   // Ordered form fields with their database key and Android-style label.
+  // Labels include trailing spaces/colons to match the original Android strings.
   static const _fieldDefs = [
     _FieldDef('name', 'Name :'),
     _FieldDef('address1', 'Address 1:'),
@@ -42,19 +42,26 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     _FieldDef('skrill', 'Skrill :'),
   ];
 
-  // Asset paths for payment-provider icons shown next to their labels.
+  // Asset paths for payment-provider icons shown in the payment rows.
   static const _paymentImages = {
     'Paypal :': 'assets/images/paypal.png',
     'Revolut :': 'assets/images/revolut.png',
     'Skrill :': 'assets/images/skrill.png',
   };
 
-  // Brand colors used for the payment-provider labels.
-  static const _paymentColors = {
-    'Paypal :': Color(0xFF2338ac),
-    'Revolut :': Color(0xFF00BCD4),
-    'Skrill :': Color(0xFF7B1FA2),
-  };
+  // Shared style for all form labels (left aligned with the Android blue shadow).
+  static const _labelStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    shadows: [
+      Shadow(
+        color: Color(0xFF03A9F4),
+        blurRadius: 3,
+        offset: Offset(1, 1),
+      ),
+    ],
+  );
 
   @override
   void initState() {
@@ -166,8 +173,6 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                       _buildTopBar(),
                       const SizedBox(height: 12),
                       _buildAmberForm(),
-                      const SizedBox(height: 24),
-                      _buildBottomButtons(),
                       const SizedBox(height: 16),
                     ],
                   ),
@@ -180,25 +185,26 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
-  /// Top bar with the Android-style back arrow and company logo placeholder.
+  /// Back button placed above the logo, matching the Android vertical order.
   Widget _buildTopBar() {
-    return SizedBox(
-      height: 60,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Image.asset(
-                'assets/images/back.png',
-                width: 70,
-                height: 40,
-                fit: BoxFit.fill,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 10, top: 20, bottom: 30),
+          child: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Image.asset(
+              'assets/images/back.png',
+              width: 70,
+              height: 50,
+              fit: BoxFit.contain,
             ),
           ),
-          Center(
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: Center(
             child: GestureDetector(
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -207,17 +213,18 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
               },
               child: Image.asset(
                 'assets/images/logoover.png',
-                height: 46,
+                width: 260,
+                height: 58,
                 fit: BoxFit.contain,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  /// Amber rounded form card with all input rows and the VAT/TAX radio group.
+  /// Amber rounded form card with all input sections, separators and buttons.
   Widget _buildAmberForm() {
     return Container(
       width: double.infinity,
@@ -226,76 +233,73 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ..._fieldDefs.map((f) => _buildInfoRow(f.label, _controllers[f.key]!)),
-          widgets.RadioGroup<String>(
-            groupValue: _regType,
-            onChanged: (v) {
-              if (v != null) setState(() => _regType = v);
-            },
-            child: Column(
-              children: [
-                _buildRadioRow('VAT reg. no.:', 'vat'),
-                _buildRadioRow('TAX reg. no.:', 'tax'),
-              ],
-            ),
-          ),
+          // Contact details: Name through Email.
+          for (var i = 0; i < 8; i++)
+            _buildInfoRow(_fieldDefs[i].label, _controllers[_fieldDefs[i].key]!),
+          // VAT / TAX selection placed directly below Email.
+          _buildRadioRow('VAT reg. no.:', 'vat'),
+          _buildRadioRow('TAX reg. no.:', 'tax'),
+          _buildCarbonSeparator(),
+          // Bank details.
+          for (var i = 8; i < 12; i++)
+            _buildInfoRow(_fieldDefs[i].label, _controllers[_fieldDefs[i].key]!),
+          _buildCarbonSeparator(),
+          // Payment rows with logo-only labels.
+          for (var i = 12; i < 15; i++)
+            _buildInfoRow(_fieldDefs[i].label, _controllers[_fieldDefs[i].key]!),
+          _buildBlueSeparator(),
+          _buildBottomButtons(),
         ],
       ),
     );
   }
 
-  /// One labeled input row. Payment rows also show the provider icon and color.
+  /// A single labeled input row. Payment rows show only the provider logo.
   Widget _buildInfoRow(String label, TextEditingController controller) {
     final paymentImage = _paymentImages[label];
-    final paymentColor = _paymentColors[label];
     final isPayment = paymentImage != null;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
-        children: [
-          SizedBox(
-            width: 120,
-            child: isPayment
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Image.asset(
-                        paymentImage,
-                        width: 28,
-                        height: 28,
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          label,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: paymentColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      label,
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: isPayment
+            ? [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Image.asset(
+                    paymentImage,
+                    width: 120,
+                    height: 50,
+                    fit: BoxFit.contain,
                   ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(child: _buildSilverTextField(controller)),
-        ],
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: _buildSilverTextField(controller),
+                  ),
+                ),
+              ]
+            : [
+                Container(
+                  width: 130,
+                  padding: const EdgeInsets.only(left: 10),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.left,
+                    style: _labelStyle,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: _buildSilverTextField(controller),
+                  ),
+                ),
+              ],
       ),
     );
   }
@@ -303,11 +307,12 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   /// A translucent silver text field matching the Android edit style.
   Widget _buildSilverTextField(TextEditingController controller) {
     return Container(
-      height: 42,
+      height: 50,
       decoration: pgmTextFieldDecoration(),
       child: TextField(
         controller: controller,
         style: const TextStyle(color: Colors.black, fontSize: 17),
+        textAlign: TextAlign.start,
         decoration: const InputDecoration(
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
@@ -322,28 +327,64 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Radio<String>(
-            value: value,
-            activeColor: Colors.red,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 190),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Radio<String>(
+                    value: value,
+                    activeColor: Colors.red,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    label,
+                    textAlign: TextAlign.left,
+                    style: _labelStyle,
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: selected
-                ? _buildSilverTextField(_regNo)
-                : const SizedBox.shrink(),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: selected
+                  ? _buildSilverTextField(_regNo)
+                  : const SizedBox(height: 50),
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  /// Carbon-styled separator used between sections in the Android layout.
+  Widget _buildCarbonSeparator() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: SizedBox(
+        height: 20,
+        child: Image.asset(
+          'assets/images/carbon_button.png',
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
+
+  /// Thin blue separator shown before the bottom buttons.
+  Widget _buildBlueSeparator() {
+    return Container(
+      width: double.infinity,
+      height: 3,
+      margin: const EdgeInsets.symmetric(vertical: 20),
+      color: const Color(0x903f51b5),
     );
   }
 
