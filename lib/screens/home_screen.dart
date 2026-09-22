@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:pgm_iphone/screens/garage_info_screen.dart';
 
+BoxDecoration _metallicDecoration({double radius = 12}) {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(radius),
+    gradient: const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color(0xFFB0B0B0),
+        Color(0xFFE8E8E8),
+        Color(0xFF999999),
+        Color(0xFF666666),
+      ],
+      stops: [0.0, 0.35, 0.65, 1.0],
+    ),
+    border: Border.all(color: const Color(0xFF444444), width: 2),
+    boxShadow: const [
+      BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(3, 3)),
+    ],
+  );
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -89,27 +110,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: 140,
       height: 70,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4,
-            offset: Offset(2, 2),
-          ),
-        ],
-      ),
+      decoration: _metallicDecoration(),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedYear,
           isExpanded: true,
-          dropdownColor: Colors.grey[200],
+          alignment: Alignment.center,
+          icon: const SizedBox.shrink(),
+          dropdownColor: Colors.grey[300],
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 16,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
+            shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
           ),
           items: years
               .map((y) => DropdownMenuItem(
@@ -117,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       y,
                       textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ))
               .toList(),
@@ -156,24 +170,24 @@ class _PgmButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width ?? 150,
-      height: 70,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.grey[300],
-          foregroundColor: Colors.black,
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: width ?? 150,
+        height: 70,
+        decoration: _metallicDecoration(),
+        child: Center(
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              shadows: [Shadow(color: Colors.white70, blurRadius: 1)],
+              height: 1.1,
+            ),
           ),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
         ),
       ),
     );
