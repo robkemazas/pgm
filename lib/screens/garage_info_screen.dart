@@ -4,6 +4,8 @@ import 'package:pgm_iphone/app_styles.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:pgm_iphone/database/app_database.dart';
 
+/// Screen for editing garage / company information.
+/// Ported from the Android `Info` activity and `layout_info.xml`.
 class GarageInfoScreen extends StatefulWidget {
   const GarageInfoScreen({super.key});
 
@@ -12,10 +14,16 @@ class GarageInfoScreen extends StatefulWidget {
 }
 
 class _GarageInfoScreenState extends State<GarageInfoScreen> {
+  // Text controllers for each form field, indexed by database column key.
   late final Map<String, TextEditingController> _controllers;
+
+  // Separate controller for the VAT or TAX registration number.
   final _regNo = TextEditingController();
+
+  // Tracks the selected registration type: 'vat' or 'tax'.
   String _regType = 'vat';
 
+  // Ordered form fields with their database key and Android-style label.
   static const _fieldDefs = [
     _FieldDef('name', 'Name :'),
     _FieldDef('address1', 'Address 1:'),
@@ -34,12 +42,14 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     _FieldDef('skrill', 'Skrill :'),
   ];
 
+  // Asset paths for payment-provider icons shown next to their labels.
   static const _paymentImages = {
     'Paypal :': 'assets/images/paypal.png',
     'Revolut :': 'assets/images/revolut.png',
     'Skrill :': 'assets/images/skrill.png',
   };
 
+  // Brand colors used for the payment-provider labels.
   static const _paymentColors = {
     'Paypal :': Color(0xFF2338ac),
     'Revolut :': Color(0xFF00BCD4),
@@ -64,6 +74,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     super.dispose();
   }
 
+  /// Loads the existing garage info row (id = 1) from Drift.
   Future<void> _load() async {
     final db = AppDatabase();
     final info = await db.select(db.garageInfo).getSingleOrNull();
@@ -89,6 +100,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     setState(() {});
   }
 
+  /// Saves or replaces the garage info row (id = 1) in the Drift database.
   Future<void> _save() async {
     final db = AppDatabase();
     final companion = GarageInfoCompanion(
@@ -122,6 +134,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     }
   }
 
+  /// Clears every text field and resets the registration type to VAT.
   void _clear() {
     for (final c in _controllers.values) {
       c.clear();
@@ -137,6 +150,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
+          // Garage/workshop background image used across the app.
           Image.asset(
             'assets/images/garage_workshop.png',
             fit: BoxFit.cover,
@@ -166,6 +180,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
+  /// Top bar with the Android-style back arrow and company logo placeholder.
   Widget _buildTopBar() {
     return SizedBox(
       height: 60,
@@ -202,6 +217,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
+  /// Amber rounded form card with all input rows and the VAT/TAX radio group.
   Widget _buildAmberForm() {
     return Container(
       width: double.infinity,
@@ -228,6 +244,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
+  /// One labeled input row. Payment rows also show the provider icon and color.
   Widget _buildInfoRow(String label, TextEditingController controller) {
     final paymentImage = _paymentImages[label];
     final paymentColor = _paymentColors[label];
@@ -283,6 +300,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
+  /// A translucent silver text field matching the Android edit style.
   Widget _buildSilverTextField(TextEditingController controller) {
     return Container(
       height: 42,
@@ -298,6 +316,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
+  /// A VAT/TAX radio row. Shows the registration number field when selected.
   Widget _buildRadioRow(String label, String value) {
     final selected = value == _regType;
     return Padding(
@@ -328,6 +347,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
+  /// Bottom CLEAR and SUBMIT buttons styled with the PGM button asset.
   Widget _buildBottomButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -350,9 +370,9 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   }
 }
 
+/// Simple pair of a Drift table column key and its on-screen label.
 class _FieldDef {
   final String key;
   final String label;
   const _FieldDef(this.key, this.label);
 }
-
