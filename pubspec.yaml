@@ -60,6 +60,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/car_makes_data.sql
 
   fonts:
     - family: CherryCreamSoda

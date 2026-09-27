@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 part 'app_database.g.dart';
 
@@ -139,4 +140,27 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  /// Seed the carMakes table from assets/car_makes_data.sql the first time the
+  /// database opens, like AppDatabase.seedCarMakesIfEmpty() in the Android app.
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) async => m.createAll(),
+        beforeOpen: (details) async {
+          final count = await customSelect(
+            'SELECT COUNT(*) AS c FROM car_makes',
+          ).map((r) => r.read<int>('c')).getSingle();
+          if (count > 0) return;
+
+          // Each line of the SQL file is a standalone INSERT OR IGNORE row.
+          final sql = await rootBundle.loadString('assets/car_makes_data.sql');
+          await transaction(() async {
+            for (final line in sql.split('\n')) {
+              final stmt = line.trim();
+              if (stmt.isEmpty || stmt.startsWith('--')) continue;
+              await customStatement(stmt);
+            }
+          });
+        },
+      );
 }

@@ -61,10 +61,13 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     'Porsche', 'Renault', 'Seat', 'Skoda', 'Subaru',
     'Suzuki', 'Tesla', 'Toyota', 'Volkswagen', 'Volvo',
   ];
-  static const _fuels = ['GASOLINE', 'PETROL', 'DIESEL', 'HYBRID', 'LPG', 'ELECTRIC', 'OTHER'];
-  static const _transmissions = ['MANUAL', 'AUTOMATIC', 'SEMI AUTO', 'OTHER'];
+  // Same leading blank entry the Android spinners start with ("  ").
+  static const _fuels = [
+    '', 'GASOLINE', 'PETROL', 'DIESEL', 'HYBRID', 'LPG', 'ELECTRIC', 'OTHER',
+  ];
+  static const _transmissions = ['', 'MANUAL', 'AUTOMATIC', 'SEMI AUTO', 'OTHER'];
   static const _colors = [
-    'WHITE', 'BLACK', 'SILVER', 'GREY', 'BLUE', 'RED', 'GREEN',
+    '', 'WHITE', 'BLACK', 'SILVER', 'GREY', 'BLUE', 'RED', 'GREEN',
     'YELLOW', 'BROWN', 'GOLD', 'ORANGE', 'OTHER',
   ];
 
@@ -72,7 +75,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   void initState() {
     super.initState();
     final now = DateTime.now();
-    _years = [for (var y = now.year; y >= 1950; y--) '$y'];
+    _years = ['', for (var y = now.year; y >= 1950; y--) '$y'];
     _date.text = _dateFormat.format(now);
     _time.text = _timeFormat.format(now);
     _loadMakes();
@@ -115,7 +118,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           ..where((t) => t.make.equals(make)))
         .get();
     setState(() {
-      _models = ['N/A', for (final r in rows) r.model];
+      // Same order as the Android model spinner: blank, N/A, then the makes.
+      _models = ['', 'N/A', for (final r in rows) r.model];
       _model = null;
       _modelIsCustom = false;
     });
@@ -133,7 +137,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         _makeIsCustom = false;
       }
     });
-    if (v != 'N/A') _loadModels(v);
+    // Blank entry just clears the selection without loading models.
+    if (v != 'N/A' && v.isNotEmpty) _loadModels(v);
   }
 
   void _onModelChanged(String? v) {
@@ -355,7 +360,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         child: Text(
           text,
           style: const TextStyle(
-            color: Color(0xFF3D5AFE),
+            // Same dark blue as Android @color/blue.
+            color: Color(0xFF000099),
             fontSize: 24,
             fontWeight: FontWeight.bold,
             shadows: [
@@ -385,7 +391,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               (v) => setState(() => _year = v))),
           _row('Make :', _makeIsCustom
               ? _field(_customMake, hint: 'MAKE', caps: true)
-              : _dropdown(['N/A', ..._makes], _make, _onMakeChanged)),
+              // Blank, then N/A, then popular/rest makes, like the Android adapter.
+              : _dropdown(['', 'N/A', ..._makes], _make, _onMakeChanged)),
           _row('Model :', _modelIsCustom
               ? _field(_customModel, hint: 'MODEL', caps: true)
               : _dropdown(_models, _model, _onModelChanged)),
@@ -410,6 +417,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
 
   /// Engine capacity list 0.6..7.5 like the Android engCap spinner.
   List<String> _engCapList() => [
+        '',
         for (var i = 6; i <= 75; i++)
           (i / 10).toStringAsFixed(1),
       ];
@@ -477,14 +485,14 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         children: [
           Container(
             width: 120,
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 5),
             alignment: Alignment.centerLeft,
             child: Text(
               label,
               textAlign: TextAlign.left,
               style: const TextStyle(
                 color: Colors.black,
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 shadows: [
                   Shadow(
@@ -498,7 +506,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(right: 5),
               child: control,
             ),
           ),
@@ -573,17 +581,22 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           ),
           dropdownColor: Colors.white,
           style: const TextStyle(color: Colors.black, fontSize: 20),
+          // Android's text_spinner item layout renders values in all caps.
           selectedItemBuilder: (context) => items
               .map((i) => Align(
                     alignment: Alignment.center,
-                    child: Text(i),
+                    child: Text(i.toUpperCase()),
                   ))
               .toList(),
           items: items
               .map((i) => DropdownMenuItem<String>(
                     value: i,
                     enabled: i != '─────────',
-                    child: Text(i),
+                    child: Text(
+                      i.toUpperCase(),
+                      style: const TextStyle(
+                          color: Colors.black, fontSize: 20),
+                    ),
                   ))
               .toList(),
           onChanged: onChanged,
