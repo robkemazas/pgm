@@ -59,7 +59,7 @@ class PgmButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: width ?? 150,
+        width: width ?? 160,
         height: height ?? 70,
         decoration: pgmButtonDecoration(),
         child: Center(
