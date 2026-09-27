@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pgm_iphone/app_styles.dart';
 import 'package:pgm_iphone/screens/garage_info_screen.dart';
+import 'package:pgm_iphone/screens/new_appointment_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -48,7 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 24),
                     _buildButtonRow([
-                      PgmButton(label: 'New\nappointment', onPressed: _notImplemented),
+                      PgmButton(
+                        label: 'New\nappointment',
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const NewAppointmentScreen()),
+                        ),
+                      ),
                       PgmButton(label: 'Pending\nAppointment', onPressed: _notImplemented),
                     ]),
                     _buildButtonRow([
