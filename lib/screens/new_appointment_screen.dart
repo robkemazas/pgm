@@ -388,16 +388,22 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
       child: Column(
         children: [
           _sectionTitle('VEHICLE'),
-          _row('Reg. Nr :', _field(_regNr, hint: 'Registration Nr')),
+          _row('Reg. Nr :', _field(_regNr,
+              hint: 'Registration Nr',
+              capitalization: TextCapitalization.characters)),
           _row('Year :', _dropdown(_years, _year,
               (v) => setState(() => _year = v), hint: 'Year')),
           _row('Make :', _makeIsCustom
-              ? _field(_customMake, hint: 'Make')
+              ? _field(_customMake,
+                  hint: 'Make',
+                  capitalization: TextCapitalization.characters)
               // Blank, then N/A, then popular/rest makes, like the Android adapter.
               : _dropdown(['', 'N/A', ..._makes], _make, _onMakeChanged,
                   hint: 'Make')),
           _row('Model :', _modelIsCustom
-              ? _field(_customModel, hint: 'Model')
+              ? _field(_customModel,
+                  hint: 'Model',
+                  capitalization: TextCapitalization.characters)
               : _dropdown(_models, _model, _onModelChanged,
                   hint: 'Model')),
           _row('Fuel :', _dropdown(_fuels, _fuel,
@@ -407,12 +413,15 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           _row('Transm. :', _dropdown(_transmissions, _transmission,
               (v) => setState(() => _transmission = v),
               hint: 'Transmission')),
-          _row('Eng. Nr. :', _field(_engNr, hint: 'Engine Number')),
+          _row('Eng. Nr. :', _field(_engNr,
+              hint: 'Engine Number',
+              capitalization: TextCapitalization.characters)),
           _row('Odometer :', _field(_odo, hint: 'Odometer',
               type: TextInputType.number)),
           _row('Color :', _dropdown(_colors, _color,
               (v) => setState(() => _color = v), hint: 'Color')),
-          _row('VIN :', _field(_vin, hint: 'VIN', caps: true)),
+          _row('VIN :', _field(_vin,
+              hint: 'VIN', capitalization: TextCapitalization.characters)),
           _row('Date :', _tapField(_date, _pickDate)),
           _row('Time :', _tapField(_time, _pickTime)),
         ],
@@ -469,13 +478,20 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
       child: Column(
         children: [
           _sectionTitle('CUSTOMER'),
-          _row('Name :', _field(_name, hint: 'Name')),
+          _row('Name :', _field(_name,
+              hint: 'Name', capitalization: TextCapitalization.words)),
           _row('Phone Nr.:', _field(_phone,
               hint: 'Phone Number', type: TextInputType.phone)),
           _row('Address :', _field(_address,
-              hint: 'Customer Address', height: 70, maxLines: 3)),
+              hint: 'Customer Address',
+              height: 70,
+              maxLines: 3,
+              capitalization: TextCapitalization.words)),
           _row('Comments :', _field(_comments,
-              hint: 'Comments', height: 128, maxLines: 5)),
+              hint: 'Comments',
+              height: 128,
+              maxLines: 5,
+              capitalization: TextCapitalization.sentences)),
         ],
       ),
     );
@@ -526,7 +542,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     String? hint,
     double height = 48,
     int maxLines = 1,
-    bool caps = false,
+    TextCapitalization capitalization = TextCapitalization.none,
     TextInputType? type,
   }) {
     return Container(
@@ -534,16 +550,15 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
       decoration: pgmTextFieldDecoration(),
       child: TextField(
         controller: controller,
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
         maxLines: maxLines,
         keyboardType: type,
-        textCapitalization:
-            caps ? TextCapitalization.characters : TextCapitalization.none,
+        textCapitalization: capitalization,
         style: const TextStyle(color: Colors.black, fontSize: 20),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hint,
-          hintStyle: const TextStyle(color: Colors.black54, fontSize: 20),
+          hintStyle: const TextStyle(color: Colors.black54, fontSize: 18),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
         ),
@@ -585,12 +600,12 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               : Text(
                   hint,
                   style: const TextStyle(
-                      color: Colors.black54, fontSize: 20),
+                      color: Colors.black54, fontSize: 18),
                 ),
           icon: Image.asset(
             'assets/images/ic_arrow_drop_down_black_24dp.png',
-            width: 36,
-            height: 36,
+            width: 96,
+            height: 146,
           ),
           dropdownColor: Colors.white,
           style: const TextStyle(color: Colors.black, fontSize: 20),
@@ -630,7 +645,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           height: 70,
           onPressed: _clear,
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         PgmButton(
           label: 'SUBMIT',
           textColor: Colors.green,
@@ -638,7 +653,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           height: 70,
           onPressed: _submit,
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         PgmButton(
           label: 'SERVICE',
           textColor: const Color(0xFF3D5AFE),
