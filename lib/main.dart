@@ -18,12 +18,12 @@ class PgmApp extends StatelessWidget {
         useMaterial3: true,
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
-            fontFamily: 'CherryCreamSoda',
-            fontFamilyFallback: ['serif'],
+            fontFamily: 'serif',
+            fontFamilyFallback: ['Georgia', 'Times New Roman'],
           ),
           titleMedium: TextStyle(
-            fontFamily: 'CherryCreamSoda',
-            fontFamilyFallback: ['serif'],
+            fontFamily: 'serif',
+            fontFamilyFallback: ['Georgia', 'Times New Roman'],
           ),
         ),
       ),

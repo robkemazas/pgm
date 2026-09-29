@@ -316,6 +316,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       _buildTopBar(),
                       const SizedBox(height: 8),
                       _buildVehicleBox(),
+                      const SizedBox(height: 16),
                       _buildPhotoButtons(),
                       const SizedBox(height: 12),
                       _buildCustomerBox(),
@@ -402,7 +403,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           _row('Fuel :', _dropdown(_fuels, _fuel,
               (v) => setState(() => _fuel = v), hint: 'Fuel')),
           _row('Eng. C.C :', _dropdown(_engCapList(), _engCap,
-              (v) => setState(() => _engCap = v), hint: 'Engine C.C')),
+              (v) => setState(() => _engCap = v), hint: 'Engine C.C.')),
           _row('Transm. :', _dropdown(_transmissions, _transmission,
               (v) => setState(() => _transmission = v),
               hint: 'Transmission')),
@@ -437,7 +438,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                 onTap: onTap,
                 child: Image.asset(
                   asset,
-                  height: 65,
+                  height: 45,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -629,6 +630,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           height: 70,
           onPressed: _clear,
         ),
+        const SizedBox(width: 16),
         PgmButton(
           label: 'SUBMIT',
           textColor: Colors.green,
@@ -636,6 +638,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           height: 70,
           onPressed: _submit,
         ),
+        const SizedBox(width: 16),
         PgmButton(
           label: 'SERVICE',
           textColor: const Color(0xFF3D5AFE),
