@@ -349,7 +349,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
         children: [
           Padding(
             // Same 10dp left start gap as the other text labels.
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 0),
             child: Container(
               // Minimum 120dp, but the label will take its natural size so the edit box stays long.
               constraints: const BoxConstraints(minWidth: 80),
@@ -361,7 +361,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                     value: value,
                     activeColor: Colors.red,
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 0),
                   Text(
                     label,
                     textAlign: TextAlign.left,
