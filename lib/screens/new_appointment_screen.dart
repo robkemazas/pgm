@@ -392,7 +392,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               hint: 'Registration Nr',
               capitalization: TextCapitalization.characters)),
           _row('Year :', _dropdown(_years, _year,
-              (v) => setState(() => _year = v), hint: 'Year')),
+              (v) => setState(() => _year = v), hint: 'Make Year')),
           _row('Make :', _makeIsCustom
               ? _field(_customMake,
                   hint: 'Make',
@@ -599,6 +599,9 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               ? null
               : Text(
                   hint,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       color: Colors.black54, fontSize: 18),
                 ),
