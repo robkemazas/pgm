@@ -360,9 +360,10 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         child: Text(
           text,
           style: const TextStyle(
-            // Same dark blue as Android @color/blue.
+            // Same dark blue as Android @color/blue and the Cherry Cream Soda font.
             color: Color(0xFF000099),
             fontSize: 24,
+            fontFamily: 'CherryCreamSoda',
             fontWeight: FontWeight.bold,
             shadows: [
               Shadow(
@@ -388,25 +389,28 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           _sectionTitle('VEHICLE'),
           _row('Reg. Nr :', _field(_regNr, hint: 'Registration Nr')),
           _row('Year :', _dropdown(_years, _year,
-              (v) => setState(() => _year = v))),
+              (v) => setState(() => _year = v), hint: 'Year')),
           _row('Make :', _makeIsCustom
-              ? _field(_customMake, hint: 'MAKE', caps: true)
+              ? _field(_customMake, hint: 'Make')
               // Blank, then N/A, then popular/rest makes, like the Android adapter.
-              : _dropdown(['', 'N/A', ..._makes], _make, _onMakeChanged)),
+              : _dropdown(['', 'N/A', ..._makes], _make, _onMakeChanged,
+                  hint: 'Make')),
           _row('Model :', _modelIsCustom
-              ? _field(_customModel, hint: 'MODEL', caps: true)
-              : _dropdown(_models, _model, _onModelChanged)),
+              ? _field(_customModel, hint: 'Model')
+              : _dropdown(_models, _model, _onModelChanged,
+                  hint: 'Model')),
           _row('Fuel :', _dropdown(_fuels, _fuel,
-              (v) => setState(() => _fuel = v))),
-          _row('Engine C.C :', _dropdown(_engCapList(), _engCap,
-              (v) => setState(() => _engCap = v))),
-          _row('Transmission :', _dropdown(_transmissions, _transmission,
-              (v) => setState(() => _transmission = v))),
-          _row('Engine Nr. :', _field(_engNr, hint: 'Eng Nr')),
+              (v) => setState(() => _fuel = v), hint: 'Fuel')),
+          _row('Eng. C.C :', _dropdown(_engCapList(), _engCap,
+              (v) => setState(() => _engCap = v), hint: 'Engine C.C')),
+          _row('Transm. :', _dropdown(_transmissions, _transmission,
+              (v) => setState(() => _transmission = v),
+              hint: 'Transmission')),
+          _row('Eng. Nr. :', _field(_engNr, hint: 'Engine Number')),
           _row('Odometer :', _field(_odo, hint: 'Odometer',
               type: TextInputType.number)),
           _row('Color :', _dropdown(_colors, _color,
-              (v) => setState(() => _color = v))),
+              (v) => setState(() => _color = v), hint: 'Color')),
           _row('VIN :', _field(_vin, hint: 'VIN', caps: true)),
           _row('Date :', _tapField(_date, _pickDate)),
           _row('Time :', _tapField(_time, _pickTime)),
@@ -565,19 +569,27 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   /// Silver dropdown styled like the Android spinner_background drawable
   /// (grey box, black border, arrow on the right edge).
   Widget _dropdown(
-      List<String> items, String? value, ValueChanged<String?> onChanged) {
+      List<String> items, String? value, ValueChanged<String?> onChanged,
+      {String? hint}) {
     return Container(
       height: 48,
       decoration: pgmTextFieldDecoration(),
-      padding: const EdgeInsets.only(left: 6),
+      padding: const EdgeInsets.only(left: 6, right: 6),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value,
           isExpanded: true,
+          hint: hint == null
+              ? null
+              : Text(
+                  hint,
+                  style: const TextStyle(
+                      color: Colors.black54, fontSize: 20),
+                ),
           icon: Image.asset(
             'assets/images/ic_arrow_drop_down_black_24dp.png',
-            width: 24,
-            height: 24,
+            width: 36,
+            height: 36,
           ),
           dropdownColor: Colors.white,
           style: const TextStyle(color: Colors.black, fontSize: 20),
