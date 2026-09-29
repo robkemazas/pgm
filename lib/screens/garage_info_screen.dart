@@ -218,7 +218,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
               child: Image.asset(
                 'assets/images/logoover.png',
                 width: 260,
-                height: 80,
+                height: 90,
                 fit: BoxFit.contain,
               ),
             ),

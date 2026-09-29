@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pgm_iphone/app_styles.dart';
 import 'package:pgm_iphone/screens/garage_info_screen.dart';
+import 'package:pgm_iphone/screens/backup_restore_screen.dart';
 import 'package:pgm_iphone/screens/new_appointment_screen.dart';
 
 
@@ -65,7 +66,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ]),
                     _buildButtonRow([
                       PgmButton(label: 'Expenses\nrecords', onPressed: _notImplemented),
-                      PgmButton(label: 'Backup\nrestore', onPressed: _notImplemented),
+                      PgmButton(
+                        label: 'Backup\nrestore',
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const BackupRestoreScreen(),
+                          ),
+                        ),
+                      ),
                     ]),
                   ],
                 ),

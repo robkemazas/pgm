@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 part 'app_database.g.dart';
 
@@ -135,8 +137,22 @@ class CarMakes extends Table {
 class AppDatabase extends _$AppDatabase {
   AppDatabase._() : super(driftDatabase(name: 'pgm_database'));
 
-  static final AppDatabase _instance = AppDatabase._();
-  factory AppDatabase() => _instance;
+  static AppDatabase? _instance;
+  factory AppDatabase() => _instance ??= AppDatabase._();
+
+  /// The path to the SQLite database file used by drift_flutter.
+  /// On Android this is under the app's documents directory.
+  static Future<String> databasePath() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return p.join(dir.path, 'pgm_database.sqlite');
+  }
+
+  /// Closes the current database connection and clears the singleton so the
+  /// next call to [AppDatabase()] opens a fresh connection. Used by restore.
+  static Future<void> closeAndReset() async {
+    await _instance?.close();
+    _instance = null;
+  }
 
   @override
   int get schemaVersion => 1;

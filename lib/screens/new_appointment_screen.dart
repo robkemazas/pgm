@@ -607,8 +607,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                 ),
           icon: Image.asset(
             'assets/images/ic_arrow_drop_down_black_24dp.png',
-            width: 96,
-            height: 146,
+            width: 40,
+            height: 40,
           ),
           dropdownColor: Colors.white,
           style: const TextStyle(color: Colors.black, fontSize: 20),
