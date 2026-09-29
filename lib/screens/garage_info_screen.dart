@@ -349,7 +349,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
         children: [
           Padding(
             // Same 10dp left start gap as the other text labels.
-            padding: const EdgeInsets.only(left: 0),
+            padding: const EdgeInsets.only(left: 10),
             child: Container(
               // Minimum 120dp, but the label will take its natural size so the edit box stays long.
               constraints: const BoxConstraints(minWidth: 80),
@@ -357,11 +357,14 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Radio value is selected by the RadioGroup ancestor.
+                  // Compact density + shrinkWrap remove the default big gap
+                  // between the radio circle and the following label.
                   Radio<String>(
                     value: value,
                     activeColor: Colors.red,
+                    visualDensity: VisualDensity.compact,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  const SizedBox(width: 0),
                   Text(
                     label,
                     textAlign: TextAlign.left,
