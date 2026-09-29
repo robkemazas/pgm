@@ -54,6 +54,7 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
       await source.copy(dest.path);
 
       _show('Backup saved to ${dest.path}');
+      if (mounted) Navigator.pop(context);
     } catch (e) {
       _show('Backup failed: $e');
     } finally {
@@ -95,6 +96,7 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
       await source.copy(dest.path);
 
       _show('Database restored. Please restart the app.');
+      if (mounted) Navigator.pop(context);
     } catch (e) {
       _show('Restore failed: $e');
     } finally {
@@ -163,21 +165,27 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
                               ),
                             ),
                             const SizedBox(height: 24),
-                            // Android-style metallic buttons for the two actions.
-                            PgmButton(
-                              label: 'BACKUP',
-                              textColor: Colors.green,
-                              width: 220,
-                              height: 80,
-                              onPressed: _busy ? null : _backup,
-                            ),
-                            const SizedBox(height: 24),
-                            PgmButton(
-                              label: 'RESTORE',
-                              textColor: Colors.red,
-                              width: 220,
-                              height: 80,
-                              onPressed: _busy ? null : _restore,
+                            // Android-style metallic buttons for the two actions,
+                            // placed side by side like the bottom button row in New Appointment.
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                PgmButton(
+                                  label: 'BACKUP',
+                                  textColor: Colors.green,
+                                  width: 130,
+                                  height: 70,
+                                  onPressed: _busy ? null : _backup,
+                                ),
+                                const SizedBox(width: 16),
+                                PgmButton(
+                                  label: 'RESTORE',
+                                  textColor: Colors.red,
+                                  width: 130,
+                                  height: 70,
+                                  onPressed: _busy ? null : _restore,
+                                ),
+                              ],
                             ),
                             if (_busy) ...[
                               const SizedBox(height: 24),
