@@ -240,6 +240,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
           // Contact details: Name through Email.
           for (var i = 0; i < 8; i++)
             _buildInfoRow(_fieldDefs[i].label, _controllers[_fieldDefs[i].key]!),
+          _buildBlueSeparator(),
           // VAT / TAX selection placed directly below Email.
           widgets.RadioGroup<String>(
             groupValue: _regType,
@@ -364,7 +365,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
       child: TextField(
         controller: controller,
         style: const TextStyle(color: Colors.black, fontSize: 18),
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
         textCapitalization: capitalization,
         keyboardType: keyboardType,
         decoration: const InputDecoration(
