@@ -51,10 +51,10 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   };
 
   // Shared style for all form labels (left aligned with the Android blue shadow).
-  // Font size increased to 22sp so the label text matches the Android look.
+  // Font size increased to 18sp so the label text matches the Android look.
   static const _labelStyle = TextStyle(
     color: Colors.black,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: FontWeight.bold,
     shadows: [
       Shadow(
@@ -248,8 +248,8 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
             },
             child: Column(
               children: [
-                _buildRadioRow('TAX reg. no.:', 'tax'),
-                _buildRadioRow('VAT reg. no.:', 'vat'),
+                _buildRadioRow('TAX no.:', 'tax'),
+                _buildRadioRow('VAT no.:', 'vat'),
               ],
             ),
           ),
@@ -268,10 +268,33 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     );
   }
 
+  /// Returns the capitalization and keyboard type for a given label.
+  (TextCapitalization, TextInputType?) _fieldOptions(String label) {
+    final lower = label.toLowerCase();
+    if (lower.contains('post code') ||
+        lower.contains('sort code') ||
+        lower.contains('bic') ||
+        lower.contains('iban')) {
+      return (TextCapitalization.characters, null);
+    }
+    if (lower.contains('phone')) {
+      return (TextCapitalization.none, TextInputType.phone);
+    }
+    if (lower.contains('email') ||
+        lower.contains('paypal') ||
+        lower.contains('revolut') ||
+        lower.contains('skrill')) {
+      return (TextCapitalization.none, null);
+    }
+    // Name, address, town, city, bank name, etc.
+    return (TextCapitalization.words, null);
+  }
+
   /// A single labeled input row. Payment rows show only the provider logo.
   Widget _buildInfoRow(String label, TextEditingController controller) {
     final paymentImage = _paymentImages[label];
     final isPayment = paymentImage != null;
+    final (capitalization, keyboardType) = _fieldOptions(label);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -283,7 +306,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Image.asset(
                     paymentImage,
-                    width: 120,
+                    width: 100,
                     height: 50,
                     fit: BoxFit.contain,
                   ),
@@ -291,14 +314,18 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 5),
-                    child: _buildSilverTextField(controller),
+                    child: _buildSilverTextField(
+                      controller,
+                      capitalization: capitalization,
+                      keyboardType: keyboardType,
+                    ),
                   ),
                 ),
               ]
             : [
                 // Label column: 150dp to fit the larger 22sp font while staying left aligned.
                 Container(
-                  width: 150,
+                  width: 120,
                   padding: const EdgeInsets.only(left: 10),
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -312,7 +339,11 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 5),
-                    child: _buildSilverTextField(controller),
+                    child: _buildSilverTextField(
+                      controller,
+                      capitalization: capitalization,
+                      keyboardType: keyboardType,
+                    ),
                   ),
                 ),
               ],
@@ -322,18 +353,24 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
 
   /// A translucent silver text field matching the Android edit style.
   // Height reduced to 40dp for a more compact iPhone form.
-  Widget _buildSilverTextField(TextEditingController controller) {
+  Widget _buildSilverTextField(
+    TextEditingController controller, {
+    TextCapitalization capitalization = TextCapitalization.none,
+    TextInputType? keyboardType,
+  }) {
     return Container(
       height: 40,
       decoration: pgmTextFieldDecoration(),
       child: TextField(
         controller: controller,
-        style: const TextStyle(color: Colors.black, fontSize: 17),
-        textAlign: TextAlign.start,
+        style: const TextStyle(color: Colors.black, fontSize: 18),
+        textAlign: TextAlign.center,
+        textCapitalization: capitalization,
+        keyboardType: keyboardType,
         decoration: const InputDecoration(
           border: InputBorder.none,
           // Small 5dp horizontal gap so text starts/ends near the box edges.
-          contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+          contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
         ),
       ),
     );
@@ -349,7 +386,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
         children: [
           Padding(
             // Same 10dp left start gap as the other text labels.
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 2),
             child: Container(
               // Minimum 120dp, but the label will take its natural size so the edit box stays long.
               constraints: const BoxConstraints(minWidth: 80),
@@ -379,7 +416,10 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
             child: Padding(
               padding: const EdgeInsets.only(right: 5),
               child: selected
-                  ? _buildSilverTextField(_regNo)
+                  ? _buildSilverTextField(
+                      _regNo,
+                      capitalization: TextCapitalization.characters,
+                    )
                   // Same 40dp placeholder height as the edit boxes.
                   : const SizedBox(height: 40),
             ),
