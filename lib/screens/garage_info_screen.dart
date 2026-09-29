@@ -20,8 +20,8 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   // Separate controller for the VAT or TAX registration number.
   final _regNo = TextEditingController();
 
-  // Tracks the selected registration type: 'vat' or 'tax'.
-  String _regType = 'vat';
+  // Tracks the selected registration type: 'vat' or 'tax'. Default matches Android: TAX.
+  String _regType = 'tax';
 
   // Ordered form fields with their database key and Android-style label.
   // Labels include trailing spaces/colons to match the original Android strings.
@@ -54,7 +54,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
   // Font size increased to 22sp so the label text matches the Android look.
   static const _labelStyle = TextStyle(
     color: Colors.black,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: FontWeight.bold,
     shadows: [
       Shadow(
@@ -143,13 +143,13 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
     }
   }
 
-  /// Clears every text field and resets the registration type to VAT.
+  /// Clears every text field and resets the registration type to TAX.
   void _clear() {
     for (final c in _controllers.values) {
       c.clear();
     }
     _regNo.clear();
-    setState(() => _regType = 'vat');
+    setState(() => _regType = 'tax');
   }
 
   @override
@@ -218,7 +218,7 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
               child: Image.asset(
                 'assets/images/logoover.png',
                 width: 260,
-                height: 70,
+                height: 80,
                 fit: BoxFit.contain,
               ),
             ),
@@ -248,8 +248,8 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
             },
             child: Column(
               children: [
-                _buildRadioRow('VAT reg. no.:', 'vat'),
                 _buildRadioRow('TAX reg. no.:', 'tax'),
+                _buildRadioRow('VAT reg. no.:', 'vat'),
               ],
             ),
           ),
@@ -348,10 +348,11 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
+            // Same 10dp left start gap as the other text labels.
             padding: const EdgeInsets.only(left: 10),
             child: Container(
               // Minimum 120dp, but the label will take its natural size so the edit box stays long.
-              constraints: const BoxConstraints(minWidth: 120),
+              constraints: const BoxConstraints(minWidth: 80),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -360,11 +361,11 @@ class _GarageInfoScreenState extends State<GarageInfoScreen> {
                     value: value,
                     activeColor: Colors.red,
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 5),
                   Text(
                     label,
                     textAlign: TextAlign.left,
-                    style: _labelStyle,
+                    style: _labelStyle.copyWith(fontSize: 18),
                   ),
                 ],
               ),
